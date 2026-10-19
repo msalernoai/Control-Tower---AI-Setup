@@ -1,0 +1,9 @@
+{
+  "name": "control-tower",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "collect": "node collect.mjs",
+    "start": "node serve.mjs"
+  }
+}

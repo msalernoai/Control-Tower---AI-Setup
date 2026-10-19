@@ -1,0 +1,10 @@
+# Anything with your data stays on your machine.
+setup.json
+keys.json
+secrets.json
+registry.json
+control-tower/snapshot.json
+logs/
+node_modules/
+.env*
+.obsidian/

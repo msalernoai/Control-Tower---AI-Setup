@@ -1,0 +1,12 @@
+{
+  "_doc": "Your setup in one file. setup.mjs copies it to ~/.claude/infra/setup.json, and every script and skill reads it from there. Paths can start with ~.",
+  "owner": "Alex",
+  "workspaces": [
+    { "name": "Work", "path": "~/Documents/Work" },
+    { "name": "Personal", "path": "~/Documents/Personal" }
+  ],
+  "brain": "~/Documents/SecondBrain",
+  "study": "~/Documents/AI Study",
+  "control_tower": "~/Documents/Control Tower & AI Setup/control-tower",
+  "own_skills": ["brain", "reflect", "humanizer"]
+}

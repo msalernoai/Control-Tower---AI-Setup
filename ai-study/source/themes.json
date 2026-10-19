@@ -1,0 +1,5 @@
+[
+  { "id": "claude-code", "name": "Claude Code and agents", "area": "AI" },
+  { "id": "ads", "name": "Google Ads and paid media", "area": "Marketing" },
+  { "id": "business", "name": "Running a business", "area": "Business" }
+]

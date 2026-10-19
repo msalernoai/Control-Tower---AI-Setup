@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Tower</title>
+<style>
+  :root { --bg:#f6f6f3; --card:#fff; --ink:#1c1c1a; --mute:#6b6b66; --line:#e3e2dc; --high:#c0362c; --medium:#b7791f; --info:#2b6cb0; --ok:#2f855a; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#141413; --card:#1e1e1c; --ink:#ecebe6; --mute:#9a9992; --line:#30302d; --high:#f0705f; --medium:#e0a84a; --info:#6ca6e8; --ok:#5fbf8a; } }
+  * { box-sizing:border-box }
+  body { margin:0; background:var(--bg); color:var(--ink); font:15px/1.5 system-ui, sans-serif }
+  header { padding:20px 16px 0; max-width:1100px; margin:auto }
+  h1 { margin:0; font-size:22px } .sub { color:var(--mute); font-size:13px }
+  nav { display:flex; gap:4px; margin-top:16px; border-bottom:1px solid var(--line); overflow-x:auto }
+  nav button { background:none; border:0; color:var(--mute); padding:8px 12px; font:inherit; cursor:pointer; border-bottom:2px solid transparent }
+  nav button.on { color:var(--ink); border-color:var(--ink) }
+  main { max-width:1100px; margin:auto; padding:16px }
+  .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-bottom:16px }
+  .stat, .card { background:var(--card); border:1px solid var(--line); border-radius:10px; padding:12px 14px }
+  .stat b { display:block; font-size:24px } .stat span { color:var(--mute); font-size:13px }
+  .f { border-left:3px solid; padding:8px 12px; margin:8px 0; background:var(--card); border-radius:0 8px 8px 0 }
+  .f.high { border-color:var(--high) } .f.medium { border-color:var(--medium) } .f.info { border-color:var(--info) }
+  .f small { color:var(--mute); display:block }
+  table { width:100%; border-collapse:collapse; background:var(--card); border:1px solid var(--line); border-radius:10px; overflow:hidden }
+  th, td { text-align:left; padding:8px 10px; border-bottom:1px solid var(--line); font-size:14px; vertical-align:top }
+  th { color:var(--mute); font-weight:500; font-size:12px; text-transform:uppercase }
+  .wrap { overflow-x:auto }
+  .pill { font-size:12px; padding:1px 8px; border-radius:99px; border:1px solid var(--line); white-space:nowrap }
+  .live { color:var(--ok) } .dead { color:var(--high) } .no-quota { color:var(--medium) }
+  .muted { color:var(--mute) }
+  h2 { font-size:16px; margin:20px 0 8px }
+</style>
+</head>
+<body>
+<header>
+  <h1>Control Tower</h1>
+  <div class="sub" id="sub">loading…</div>
+  <nav id="tabs"></nav>
+</header>
+<main id="main"></main>
+<script>
+const TABS = { overview: 'Overview', projects: 'Projects', claude: 'Claude', gemini: 'Gemini pool' }
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]))
+const ago = (iso) => { if (!iso) return '-'; const d = Math.round((Date.now() - new Date(iso)) / 86400e3); return d <= 0 ? 'today' : d === 1 ? 'yesterday' : `${d}d ago` }
+const yes = (b) => b ? '✓' : '<span class="muted">-</span>'
+let S, tab = location.hash.slice(1) || 'overview'
+
+const findings = (list) => list.length ? list.map((f) => `<div class="f ${f.sev}"><b>${esc(f.title)}</b><small>${esc(f.detail)} · ${esc(f.where)}</small></div>`).join('') : '<p class="muted">Nothing to fix. 🎉</p>'
+const table = (head, rows) => `<div class="wrap"><table><tr>${head.map((h) => `<th>${h}</th>`).join('')}</tr>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join('')}</tr>`).join('')}</table></div>`
+
+const views = {
+  overview: () => {
+    const order = { high: 0, medium: 1, info: 2 }
+    const f = [...S.findings].sort((a, b) => order[a.sev] - order[b.sev])
+    const live = S.gemini.keys.filter((k) => k.ping === 'live').length
+    return `<div class="stats">
+      <div class="stat"><b>${S.projects.length}</b><span>projects</span></div>
+      <div class="stat"><b>${S.claude.usage.memories}</b><span>Claude memories</span></div>
+      <div class="stat"><b>${S.claude.skills.length}</b><span>skills</span></div>
+      <div class="stat"><b>${live}/${S.gemini.keys.length}</b><span>Gemini keys live</span></div>
+      <div class="stat"><b style="color:var(--high)">${f.filter((x) => x.sev === 'high').length}</b><span>high findings</span></div>
+    </div><h2>Findings</h2>${findings(f)}`
+  },
+  projects: () => table(['Project', 'Area', 'CLAUDE.md', 'Memories', 'Last session', 'Git', 'Deploy'],
+    S.projects.map((p) => [
+      `<b>${esc(p.name)}</b><br><small class="muted">${esc(p.path)}</small>`, esc(p.area), yes(p.claude_md), p.memories, ago(p.last_session),
+      p.git ? `${p.git.changes ? `<span class="pill">${p.git.changes} changed</span> ` : ''}${p.git.unpushed ? `<span class="pill">${p.git.unpushed} unpushed</span> ` : ''}<small class="muted">${ago(p.git.last_commit)}</small>` : '<span class="muted">no git</span>',
+      [p.vercel && esc(p.vercel), p.supabase && 'Supabase', p.gemini && 'Gemini'].filter(Boolean).join('<br>') || '<span class="muted">-</span>',
+    ])),
+  claude: () => `<h2>Instructions (CLAUDE.md layers)</h2>${table(['Level', 'File', 'Lines', 'Updated'], S.claude.instructions.map((i) => [i.level, esc(i.path), i.lines, i.updated]))}
+    <h2>Skills</h2>${table(['Skill', 'Yours?', 'Uses', 'Last use'], S.claude.skills.map((s) => [esc(s.name), yes(s.own), s.uses, s.last_use ?? '<span class="muted">never</span>']))}
+    <h2>Usage</h2><p>${S.claude.usage.sessions} sessions · ${S.claude.usage.memories} memories · ${S.claude.config.permissions} allow rules · hooks: ${esc(S.claude.config.hooks.join(', ') || 'none')}</p>`,
+  gemini: () => `<p class="muted">Model pinged: ${esc(S.gemini.model ?? '-')} · last ping ${ago(S.gemini.ping_at)} · minimum live: ${S.gemini.min_live_keys ?? '-'}</p>` +
+    table(['Key', 'Google account', 'GCP project', 'Value', 'Ping'], S.gemini.keys.map((k) => [k.id, esc(k.gmail), esc(k.gcp_project), `<code>${esc(k.tail)}</code>`, `<span class="${k.ping}">${k.ping ?? '-'}</span>`])),
+}
+
+function render() {
+  document.getElementById('tabs').innerHTML = Object.entries(TABS).map(([k, v]) => `<button class="${k === tab ? 'on' : ''}" onclick="location.hash='${k}'">${v}</button>`).join('')
+  document.getElementById('main').innerHTML = views[tab]?.() ?? ''
+}
+addEventListener('hashchange', () => { tab = location.hash.slice(1) || 'overview'; render() })
+fetch('snapshot.json').then((r) => r.json()).then((s) => {
+  S = s
+  document.getElementById('sub').textContent = `${s.owner ?? ''} · collected ${ago(s.generated_at)} (${new Date(s.generated_at).toLocaleString()})`
+  render()
+})
+</script>
+</body>
+</html>

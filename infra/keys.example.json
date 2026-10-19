@@ -1,0 +1,7 @@
+{
+  "_doc": "Gemini key pool. One key per Google Cloud project: quota belongs to the project, so two keys in the same project add nothing. Status: active | retired.",
+  "keys": [
+    { "id": "k01", "gmail": "you+ai1@example.com", "gcp_project": "my-pool-1", "status": "active", "value": "PASTE_KEY_HERE", "note": "" },
+    { "id": "k02", "gmail": "you+ai2@example.com", "gcp_project": "my-pool-2", "status": "active", "value": "PASTE_KEY_HERE", "note": "" }
+  ]
+}

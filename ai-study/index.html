@@ -1,0 +1,33 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>AI Study</title>
+<style>
+:root{--bg:#f7f6f2;--card:#fff;--ink:#1d1c1a;--mute:#6d6b65;--line:#e4e2db;--apply:#2f855a;--study:#2b6cb0;--drop:#9a9892}
+@media (prefers-color-scheme:dark){:root{--bg:#151514;--card:#1f1e1c;--ink:#edece7;--mute:#9b9993;--line:#32312e;--apply:#5fbf8a;--study:#6ca6e8;--drop:#77756f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 system-ui,sans-serif}
+.w{max-width:900px;margin:auto;padding:20px 16px}h1{margin:0 0 4px;font-size:22px}.m{color:var(--mute);font-size:13px}
+.bar{display:flex;gap:6px;flex-wrap:wrap;margin:14px 0}.bar button{border:1px solid var(--line);background:var(--card);color:var(--ink);border-radius:99px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer}
+.bar button.on{background:var(--ink);color:var(--bg)}
+.c{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0}
+.c.seen{opacity:.55}.v{font-size:12px;font-weight:600;text-transform:uppercase}.apply{color:var(--apply)}.study{color:var(--study)}.drop{color:var(--drop)}
+.c h3{margin:4px 0;font-size:16px}.c a{color:inherit}details{margin-top:6px}pre{white-space:pre-wrap;font:inherit;font-size:14px}
+label{font-size:13px;color:var(--mute);cursor:pointer}
+</style></head><body><div class="w"><h1>AI Study</h1><div class="m" id="sub"></div><div id="week"></div>
+<div class="bar" id="bar"></div><div id="list"></div></div>
+<script>
+const D={"items": [{"id": "01", "url": "https://example.com/video-about-skills", "author": "@example", "duration": "8:40", "title": "(Example) Writing your first Claude Code skill", "added": "2026-10-19", "theme": "claude-code", "topic": "Claude Code skills", "type": "news", "verdict": "apply", "summary": "Example item. Shows how a SKILL.md with a clear description makes Claude pick the skill on its own, and how to keep helper scripts next to it.", "for_you": "Turn the weekly report you write by hand into a skill.", "next": "Draft a SKILL.md for the weekly report (30 min).", "links": [{"name": "Claude Code docs", "url": "https://docs.claude.com/en/docs/claude-code"}], "guide": "## What it really is\n(Example guide.) A skill is a folder in `~/.claude/skills/<name>/` with a `SKILL.md`. Its `description`\nis what Claude reads to decide when to use it.\n\n## Status\nBuilt into Claude Code. Checked on 2026-10-19.\n\n## Do you already have it?\nThis repo ships three: `brain`, `reflect`, `humanizer`.\n\n## Step by step to try it\n1. Pick a task you repeat every week.\n2. Write the steps you explain to Claude every time into `~/.claude/skills/<name>/SKILL.md`.\n3. Start a new session and ask for the task in your own words. (30 min)\n\n## Traps and hype\nA vague description means the skill never fires. Too many skills cost context in every session.\n\n## Sources\n- [Claude Code docs](https://docs.claude.com/en/docs/claude-code)\n", "area": "AI"}, {"id": "02", "url": "https://example.com/hype-reel", "author": "@example", "duration": "0:45", "title": "(Example) '10 AI tools that will replace your job'", "added": "2026-10-19", "theme": "claude-code", "topic": "AI tool lists", "type": "hype", "verdict": "drop", "summary": "Example item. A list of tools with no demo and no numbers.", "for_you": "No real link to your projects.", "next": "Nothing.", "links": [], "guide": "", "area": "AI"}], "themes": {"claude-code": {"id": "claude-code", "name": "Claude Code and agents", "area": "AI"}, "ads": {"id": "ads", "name": "Google Ads and paid media", "area": "Marketing"}, "business": {"id": "business", "name": "Running a business", "area": "Business"}}, "week": null};const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+let seen={};try{seen=JSON.parse(localStorage.getItem('seen')||'{}')}catch{}
+let f='apply+study';const F={'apply+study':'Worth it','apply':'Apply','study':'Study','drop':'Dropped','all':'All'};
+function save(){try{localStorage.setItem('seen',JSON.stringify(seen))}catch{}}
+function render(){
+ document.getElementById('sub').textContent=D.items.length+' items';
+ document.getElementById('week').innerHTML=D.week?'<div class="c"><b>This week</b> <span class="m">'+esc(D.week.date)+'</span><p>'+esc(D.week.note)+'</p>'+D.week.highlights.map(h=>'<div>#'+esc(h.id)+' · '+esc(h.why)+'</div>').join('')+'</div>':'';
+ document.getElementById('bar').innerHTML=Object.entries(F).map(([k,v])=>'<button class="'+(k===f?'on':'')+'" onclick="f=\''+k+'\';render()">'+v+'</button>').join('');
+ const show=D.items.filter(i=>f==='all'||f.split('+').includes(i.verdict)).reverse();
+ document.getElementById('list').innerHTML=show.map(i=>'<div class="c '+(seen[i.id]?'seen':'')+'"><span class="v '+i.verdict+'">'+i.verdict+'</span> <span class="m">#'+i.id+' · '+esc(i.area)+' · '+esc(i.topic)+' · '+esc(i.type)+' · '+esc(i.added)+'</span>'+
+  '<h3><a href="'+esc(i.url)+'" target="_blank" rel="noopener">'+esc(i.title)+'</a></h3><div>'+esc(i.summary)+'</div>'+
+  (i.for_you?'<div class="m">For you: '+esc(i.for_you)+'</div>':'')+(i.next?'<div class="m">Next: '+esc(i.next)+'</div>':'')+
+  (i.guide?'<details><summary>Guide</summary><pre>'+esc(i.guide)+'</pre></details>':'')+
+  '<label><input type="checkbox" '+(seen[i.id]?'checked':'')+' onchange="seen[\''+i.id+'\']=this.checked;save();render()"> seen</label></div>').join('')||'<p class="m">Nothing here.</p>';
+}
+render();
+</script></body></html>

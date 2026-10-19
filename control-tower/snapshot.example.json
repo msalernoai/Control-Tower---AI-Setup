@@ -1,0 +1,43 @@
+{
+  "version": 1,
+  "owner": "Alex (example data)",
+  "generated_at": "2026-10-19T12:00:00.000Z",
+  "projects": [
+    { "area": "Work", "name": "client-dashboard", "path": "~/Documents/Work/client-dashboard", "claude_md": true, "code": true, "memories": 6, "sessions": 41, "last_session": "2026-10-18", "remote": "alex/client-dashboard",
+      "git": { "changes": 0, "last_commit": "2026-10-18T19:02:00Z", "unpushed": 0, "branch": "main" }, "slug": "client-dashboard", "vercel": "client-dashboard.vercel.app", "supabase": "abcdefghijklmnop", "gemini": true },
+    { "area": "Work", "name": "landing-pages", "path": "~/Documents/Work/landing-pages", "claude_md": false, "code": true, "memories": 2, "sessions": 9, "last_session": "2026-10-02", "remote": null,
+      "git": { "changes": 4, "last_commit": "2026-09-30T10:00:00Z", "unpushed": null, "branch": "main" }, "slug": null, "vercel": null, "supabase": null, "gemini": false },
+    { "area": "Personal", "name": "budget-app", "path": "~/Documents/Personal/budget-app", "claude_md": true, "code": true, "memories": 3, "sessions": 15, "last_session": "2026-10-15", "remote": "alex/budget-app",
+      "git": { "changes": 0, "last_commit": "2026-10-15T21:40:00Z", "unpushed": 2, "branch": "main" }, "slug": "budget-app", "vercel": "budget-app.vercel.app", "supabase": "qrstuvwxyzabcdef", "gemini": true }
+  ],
+  "gemini": { "model": "gemini-3.5-flash-lite", "min_live_keys": 3, "ping_at": "2026-10-19T09:00:00.000Z",
+    "keys": [
+      { "id": "k01", "gmail": "alex+ai1@example.com", "gcp_project": "pool-1", "status": "active", "tail": "...a1B2", "ping": "live" },
+      { "id": "k02", "gmail": "alex+ai1@example.com", "gcp_project": "pool-2", "status": "active", "tail": "...c3D4", "ping": "live" },
+      { "id": "k03", "gmail": "alex+ai2@example.com", "gcp_project": "pool-3", "status": "active", "tail": "...e5F6", "ping": "no-quota" },
+      { "id": "k04", "gmail": "alex+ai2@example.com", "gcp_project": "pool-4", "status": "active", "tail": "...g7H8", "ping": "live" }
+    ] },
+  "claude": {
+    "generated_at": "2026-10-19T12:00:00.000Z",
+    "instructions": [
+      { "level": "global", "path": "~/.claude/CLAUDE.md", "lines": 42, "updated": "2026-10-10" },
+      { "level": "area", "path": "~/Documents/Work/CLAUDE.md", "lines": 30, "updated": "2026-10-01" },
+      { "level": "area", "path": "~/Documents/SecondBrain/CLAUDE.md", "lines": 35, "updated": "2026-09-20" },
+      { "level": "project", "path": "~/Documents/Work/client-dashboard/CLAUDE.md", "lines": 58, "updated": "2026-10-18" }
+    ],
+    "skills": [
+      { "name": "brain", "own": true, "link": false, "uses": 23, "last_use": "2026-10-18" },
+      { "name": "humanizer", "own": true, "link": false, "uses": 11, "last_use": "2026-10-16" },
+      { "name": "reflect", "own": true, "link": false, "uses": 2, "last_use": "2026-10-05" },
+      { "name": "old-experiment", "own": false, "link": false, "uses": 0, "last_use": null }
+    ],
+    "config": { "model": null, "permissions": 37, "hooks": ["SessionStart"] },
+    "usage": { "sessions": 65, "memories": 11 }
+  },
+  "findings": [
+    { "sev": "high", "title": "1 orphan memory folder(s)", "detail": "c--Users-alex-Documents-old-name (3). A folder moved and Claude stopped loading these.", "where": "~/.claude/projects" },
+    { "sev": "medium", "title": "landing-pages: uncommitted changes for over a week", "detail": "4 changed file(s).", "where": "~/Documents/Work/landing-pages" },
+    { "sev": "info", "title": "1 code project(s) without their own CLAUDE.md", "detail": "landing-pages.", "where": "workspaces" },
+    { "sev": "info", "title": "budget-app: 2 commit(s) not pushed", "detail": "Branch main.", "where": "~/Documents/Personal/budget-app" }
+  ]
+}

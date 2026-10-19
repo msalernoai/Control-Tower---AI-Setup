@@ -1,0 +1,1 @@
+- [Deploy is manual](deploy-is-manual.md) — never push or deploy; leave it ready and say so

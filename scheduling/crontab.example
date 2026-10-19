@@ -1,0 +1,8 @@
+# macOS / Linux. Run `crontab -e` and paste these two lines, changing the path to where you cloned this repo.
+# cron has a minimal PATH: if node or claude are not found, use full paths (`which node`, `which claude`).
+
+# Control Tower collector, every hour
+0 * * * *  cd "$HOME/Documents/Control Tower & AI Setup/control-tower" && node collect.mjs >/dev/null 2>&1
+
+# /brain sync, every day at 23:00 (only starts Claude if a memory changed)
+0 23 * * * node "$HOME/Documents/Control Tower & AI Setup/scheduling/brain-sync.mjs"

@@ -1,0 +1,18 @@
+{
+  "_doc": "The map of your accounts and projects. Structure only, never a credential value: those live in keys.json and secrets.json.",
+  "projects": {
+    "my-app": {
+      "name": "My App",
+      "path": "~/Documents/Work/my-app",
+      "github": "your-user/my-app",
+      "vercel": "my-app.vercel.app",
+      "supabase": { "ref": "abcdefghijklmnop", "account": "you@example.com" },
+      "gemini": true
+    }
+  },
+  "gemini": {
+    "min_live_keys": 3,
+    "models_fast": ["gemini-3.5-flash-lite", "gemini-3.6-flash", "gemini-flash-latest"],
+    "models_chat": ["gemini-3.6-flash", "gemini-3.5-flash", "gemini-flash-lite-latest"]
+  }
+}
