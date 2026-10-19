@@ -41,8 +41,8 @@ Needs: [Claude Code](https://docs.claude.com/en/docs/claude-code), Node 18+, Pyt
 [Obsidian](https://obsidian.md) is optional (the vault is plain markdown).
 
 ```bash
-git clone https://github.com/<user>/control-tower-ai-setup.git
-cd control-tower-ai-setup
+git clone https://github.com/msalernoai/Control-Tower---AI-Setup.git
+cd Control-Tower---AI-Setup
 
 node setup.mjs              # 1st run: creates ~/.claude/infra/setup.json and stops
 # edit ~/.claude/infra/setup.json: your name and your folders
