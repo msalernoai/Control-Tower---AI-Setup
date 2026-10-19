@@ -35,7 +35,16 @@ Each place has one job, so nothing is written twice:
 **vault** = decisions and the why · **Control Tower** = technical state, generated ·
 **Claude memory** = how to work in each project · **AI Study** = what to learn next.
 
-## Quick start (15 minutes)
+## Easiest way: let Claude install it
+
+Open Claude Code and send:
+
+> Install and set up this for me, adapted to how I work: https://github.com/msalernoai/Control-Tower---AI-Setup
+
+Claude follows [CLAUDE.md](CLAUDE.md): asks a few questions about your work, installs everything,
+fills your second brain and opens the dashboard. You never touch the terminal.
+
+## Manual quick start (15 minutes)
 
 Needs: [Claude Code](https://docs.claude.com/en/docs/claude-code), Node 18+, Python 3, Git.
 [Obsidian](https://obsidian.md) is optional (the vault is plain markdown).
